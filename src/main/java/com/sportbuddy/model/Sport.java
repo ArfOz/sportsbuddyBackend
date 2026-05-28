@@ -10,9 +10,9 @@ public class Sport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;        // Örn: Football, Running, Tennis
-    private String icon;        // (opsiyonel) UI için ikon adı veya URL
-    private String description; // (opsiyonel) spor açıklaması
+    private String name;
+    private String icon;
+    private String description;
 
     public Long getId() {
         return id;

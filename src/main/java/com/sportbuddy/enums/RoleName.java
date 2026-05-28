@@ -1,6 +1,6 @@
 package com.sportbuddy.enums;
 
-public enum Role {
+public enum RoleName {
 
     USER,               // Regular user
     VERIFIED_USER,      // User with verified phone/email
