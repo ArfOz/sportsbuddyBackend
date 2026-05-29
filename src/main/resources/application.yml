@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/sportbuddy
-    username: arif
-    password: 1234
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sportbuddy}
+    username: ${DB_USERNAME:arif}
+    password: ${DB_PASSWORD:1234}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -16,6 +16,7 @@ spring:
 server:
   port: 8080
 
-
-jwt.secret : "your-super-secure-and-very-long-32-byte-secret-key-here!!"
-jwt.expiration-ms : 3600000
+jwt:
+  secret: ${JWT_SECRET:u8h2J4q9x3L7t9F0Wm2B8sP4rT6vY1kZpQ3nR5uT7wX9yC0dE2fG4hJ6lM8oP0Q}
+  expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
