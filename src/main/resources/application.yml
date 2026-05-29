@@ -17,6 +17,6 @@ server:
   port: 8080
 
 jwt:
-  secret: ${JWT_SECRET:u8h2J4q9x3L7t9F0Wm2B8sP4rT6vY1kZpQ3nR5uT7wX9yC0dE2fG4hJ6lM8oP0Q}
+  secret: "bXlTdXBlclNlY3JldEtleUZvckpXVFNpblByb2R1Y3Rpb24xMjM0NTY3ODkwIQ=="
   expiration-ms: ${JWT_EXPIRATION_MS:3600000}
   refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
