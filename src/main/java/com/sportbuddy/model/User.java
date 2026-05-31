@@ -3,15 +3,17 @@ package com.sportbuddy.model;
 import com.sportbuddy.enums.Gender;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +34,6 @@ public class User {
     @Column(name = "sport")
     private List<Sport> sports;
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -47,7 +41,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
 
     private String level;
 
@@ -63,6 +56,48 @@ public class User {
 
     @ManyToMany(mappedBy = "participants")
     private List<Event> joinedEvents;
+
+    public User() {}
+
+    // -------------------------
+    // Spring Security Methods
+    // -------------------------
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email; // login email ile yapılıyor
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    // -------------------------
+    // Getter - Setter
+    // -------------------------
 
     public Long getId() {
         return id;
@@ -88,6 +123,7 @@ public class User {
         this.email = email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -102,6 +138,14 @@ public class User {
 
     public void setSports(List<Sport> sports) {
         this.sports = sports;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public String getLevel() {
@@ -159,7 +203,4 @@ public class User {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
-
-
 }

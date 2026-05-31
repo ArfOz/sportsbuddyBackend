@@ -1,11 +1,8 @@
 package com.sportbuddy.model;
 
-
 import com.sportbuddy.enums.RoleName;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -20,8 +17,6 @@ public class Role {
     @Column(unique = true, nullable = false)
     private RoleName name;
 
-
-    private Set<Role> roles = new HashSet<>();
 
     public Role() {
     }

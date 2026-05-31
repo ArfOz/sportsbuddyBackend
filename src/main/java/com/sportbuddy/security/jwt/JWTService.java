@@ -1,4 +1,4 @@
-package com.sportbuddy.service;
+package com.sportbuddy.security.jwt;
 
 import com.sportbuddy.model.User;
 import io.jsonwebtoken.Claims;
@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.function.Function;
@@ -61,11 +60,11 @@ public class JWTService {
 
 
     // -------------------- GENERATE REFRESH TOKEN --------------------
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken() {
         return generateOpaqueRefreshToken();
     }
 
-    public String generateOpaqueRefreshToken() {
+    private String generateOpaqueRefreshToken() {
         byte[] bytes = new byte[64];
         secureRandom.nextBytes(bytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
