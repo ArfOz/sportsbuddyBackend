@@ -31,6 +31,8 @@ public class Token {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    private boolean revoked = false; // 🔥 EKLEDİK
+
 
     public Long getId() {
         return id;
@@ -96,5 +98,12 @@ public class Token {
         this.updatedAt = updatedAt;
     }
 
+    public boolean isRevoked() {
+        return revoked;
+    }
+
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
+    }
 
 }
