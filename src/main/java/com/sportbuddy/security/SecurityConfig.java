@@ -27,8 +27,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // login/register/refresh
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()  // default: everything protected
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -39,3 +38,5 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
+

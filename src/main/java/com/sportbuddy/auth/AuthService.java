@@ -33,7 +33,7 @@ public class AuthService {
 
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public User register(RegisterRequest request) {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
@@ -50,12 +50,8 @@ public class AuthService {
 
         user.getRoles().add(userRole);
 
-        User savedUser = userRepository.save(user);
 
-        String accessToken = jwtService.generateToken(savedUser);
-        String refreshToken = jwtService.generateRefreshToken();
-
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return userRepository.save(user);
     }
 
 

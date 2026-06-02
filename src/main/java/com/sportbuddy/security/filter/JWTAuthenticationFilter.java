@@ -1,5 +1,7 @@
 package com.sportbuddy.security.filter;
 
+import com.sportbuddy.model.Token;
+import com.sportbuddy.repository.TokenRepository;
 import com.sportbuddy.security.annotations.Public;
 import com.sportbuddy.security.jwt.JWTService;
 import com.sportbuddy.model.User;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -26,6 +29,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository; // <-- ADD THIS
     private final List<HandlerMapping> handlerMappings;
 
     @Override
@@ -34,28 +38,55 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1) @Public control
+        // 1) Skip @Public endpoints
         if (isPublicEndpoint(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2) Authorization header
+        // 2) Extract Authorization header
         String authHeader = request.getHeader("Authorization");
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = authHeader.substring(7);
+
         String email = jwtService.extractUsername(token);
 
+        // 3) Validate token + check DB revoke
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // Load user
             User user = userRepository.findByEmail(email).orElse(null);
+            if (user == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-            if (user != null && jwtService.isTokenValid(token, user)) {
+            // Load token record from DB
+            Token tokenRecord = tokenRepository.findByAccessToken(token).orElse(null);
+
+            // If token not found in DB → reject
+            if (tokenRecord == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // If token is revoked → reject
+            if (tokenRecord.isRevoked()) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // If token expired in DB → reject
+            if (tokenRecord.getAccessExpiresAt().isBefore(LocalDateTime.now())) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // Validate JWT signature
+            if (jwtService.isTokenValid(token, user)) {
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
