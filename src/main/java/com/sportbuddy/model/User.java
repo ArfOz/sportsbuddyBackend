@@ -1,5 +1,6 @@
 package com.sportbuddy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sportbuddy.enums.Gender;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,8 +24,10 @@ public class User implements UserDetails {
 
     private String name;
 
+    @Column(unique=true)
     private String email;
 
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

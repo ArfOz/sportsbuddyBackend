@@ -1,6 +1,7 @@
 package com.sportbuddy.auth;
 
 import com.sportbuddy.enums.RoleName;
+import com.sportbuddy.exception.BusinessException;
 import com.sportbuddy.model.Sport;
 import com.sportbuddy.model.Role;
 import com.sportbuddy.model.Token;
@@ -43,10 +44,14 @@ public class AuthService {
     }
 
     public User register(RegisterRequest request) {
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email already in use");
+        }
+
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setGender(request.getGender());
 
         user.setLevel(request.getLevel());
