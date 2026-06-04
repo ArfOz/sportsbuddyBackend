@@ -3,6 +3,8 @@ package com.sportbuddy.model;
 import com.sportbuddy.enums.Gender;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,11 +30,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ElementCollection(targetClass = Sport.class)
-    @CollectionTable(name = "user_sports", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sport")
-    private List<Sport> sports;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_sports",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -48,8 +52,9 @@ public class User implements UserDetails {
 
     private Double longitude;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String availability; // JSON
+    private Map<String, Object> availability;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -72,8 +77,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // login email ile yapılıyor
-    }
+        return email; }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -132,11 +136,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<Sport> getSports() {
+    public Set<Sport> getSports() {
         return sports;
     }
 
-    public void setSports(List<Sport> sports) {
+    public void setSports(Set<Sport> sports) {
         this.sports = sports;
     }
 
@@ -172,11 +176,11 @@ public class User implements UserDetails {
         this.longitude = longitude;
     }
 
-    public String getAvailability() {
+    public Map<String,Object> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(String availability) {
+    public void setAvailability(Map<String,Object>  availability) {
         this.availability = availability;
     }
 

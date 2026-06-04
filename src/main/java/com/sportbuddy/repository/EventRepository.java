@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<Event> findBySport(Sport sport);
+    List<Event> findBySportType(Sport sport);
 
     List<Event> findByCreatedById(Long userId);
 }

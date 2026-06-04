@@ -1,6 +1,6 @@
 package com.sportbuddy.enums;
 
-public enum Sport {
+public enum SportEnum {
     FOOTBALL,
     TENNIS,
     SWIMMING,

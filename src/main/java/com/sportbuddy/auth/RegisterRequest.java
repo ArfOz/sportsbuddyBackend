@@ -5,6 +5,8 @@ import com.sportbuddy.model.Sport;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 public class RegisterRequest {
@@ -13,9 +15,9 @@ public class RegisterRequest {
     private String email;
     private String password;
     private Gender gender;
-    private List<Sport> sports;
+    private Set<String> sports;
     private String level;
     private Double latitude;
     private Double longitude;
-    private String availability; // JSON string
+    private Map<String,Object> availability; // JSON string
 }

@@ -17,7 +17,7 @@ public class TokenService {
     public Token saveTokens(User user, String accessToken, String refreshToken,
                             LocalDateTime accessExp, LocalDateTime refreshExp) {
 
-        tokenRepository.deleteByUser(user);
+        tokenRepository.revokeActiveTokenByUser(user.getId());
 
         Token token = new Token();
         token.setUser(user);
@@ -68,7 +68,7 @@ public class TokenService {
     }
 
     public void logout(User user) {
-        tokenRepository.deleteByUser(user);
+        tokenRepository.revokeActiveTokenByUser(user.getId());
     }
 
 }
