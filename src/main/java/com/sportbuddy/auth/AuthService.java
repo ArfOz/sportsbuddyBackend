@@ -53,8 +53,7 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setGender(request.getGender());
-
-        user.setLevel(request.getLevel());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));        user.setLevel(request.getLevel());
         user.setLatitude(request.getLatitude());
         user.setLongitude(request.getLongitude());
         user.setAvailability(request.getAvailability());
@@ -79,11 +78,13 @@ public class AuthService {
     public AuthenticationResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException("Email not found"));
+
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new BusinessException("Invalid password");
         }
+
 
         // Revoke only the active token (keep history)
         tokenRepository.revokeActiveTokenByUser(user.getId());
