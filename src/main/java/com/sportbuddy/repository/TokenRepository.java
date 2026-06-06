@@ -5,10 +5,12 @@ import com.sportbuddy.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
     // Used during refresh to find the token record
@@ -25,6 +27,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findActiveTokenByUser(Long userId);
 
     // Revoke only the active token (used during login)
+
     @Modifying
     @Query("UPDATE Token t SET t.revoked = true WHERE t.user.id = :userId AND t.revoked = false")
     void revokeActiveTokenByUser(Long userId);

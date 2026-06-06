@@ -53,7 +53,8 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setGender(request.getGender());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));        user.setLevel(request.getLevel());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setLevel(request.getLevel());
         user.setLatitude(request.getLatitude());
         user.setLongitude(request.getLongitude());
         user.setAvailability(request.getAvailability());
