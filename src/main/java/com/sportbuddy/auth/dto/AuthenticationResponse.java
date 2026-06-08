@@ -1,4 +1,4 @@
-package com.sportbuddy.auth;
+package com.sportbuddy.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
