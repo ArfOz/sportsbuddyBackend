@@ -2,7 +2,7 @@ package com.sportbuddy.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import com.sportbuddy.enums.Sport;
+import com.sportbuddy.enums.SportEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,7 @@ public class Event {
     private String title;
 
     @Enumerated(EnumType.STRING)
-    private Sport sport;
+    private SportEnum sportEnum;
 
     private Double locationLat;
     private Double locationLng;
@@ -68,12 +68,12 @@ public class Event {
         this.locationLat = locationLat;
     }
 
-    public Sport getSportType() {
-        return sport;
+    public SportEnum getSportType() {
+        return sportEnum;
     }
 
-    public void setSportType(Sport sport) {
-        this.sport = sport;
+    public void setSportType(SportEnum sportEnum) {
+        this.sportEnum = sportEnum;
     }
 
     public Double getLocationLng() {
